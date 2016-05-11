@@ -1,3 +1,5 @@
+"use strict";
+
 /**
  * @constructor
  * @param data - The data for the node.
@@ -120,6 +122,23 @@ LinkedList.prototype.has = function(node)
 };
 
 /**
+ * Gets the node based on the data.
+ * @param data - the data of the target node.
+ * @return The node found, or -1 if not found.
+ */
+LinkedList.prototype.getNode = function(data)
+{
+	for (var curr = this.head; curr !== null; curr = curr.next)
+	{
+		if (curr.data === data)
+		{
+			return curr;
+		}
+	}
+	return -1;
+};
+
+/**
  * Adds new node to list after the target node.  If target not found,
  *   then just add to the end of the list.
  * @param data - the data for the new node to be inserted
@@ -136,7 +155,7 @@ LinkedList.prototype.insert = function(data, node)
 		{
 			new_node.next = curr.next;
 			curr.next = new_node;
-			length += 1;
+			this.length += 1;
 			return new_node;
 		}
 	}
@@ -144,7 +163,7 @@ LinkedList.prototype.insert = function(data, node)
 	// We already reached the last node of the list at this point.
 	this.tail.next = new_node;
 	this.tail = new_node;
-	length += 1;
+	this.length += 1;
 	return new_node; 
 };
 
@@ -160,3 +179,40 @@ LinkedList.prototype.display = function()
 	}
 	console.log("*****End of linked list*****");
 };
+
+
+function testLinkedList()
+{
+	var list_data = [
+		"Mercury",
+		"Venus",
+		"Earth",
+		"Mars",
+		"Jupiter",
+		"Saturn",
+		"Uranus",
+		"Neptune",
+		"Pluto"
+	];
+	
+	var ll_planets = new LinkedList();
+	for (var i = 0; i < list_data.length; i++)
+	{
+		ll_planets.add(list_data[i]);
+	}
+	
+	ll_planets.display();
+	
+	ll_planets.insert('Eden Prime', new Node('Jupiter'));
+	ll_planets.insert('Virmire', new Node('Noveria'));
+	ll_planets.display();
+	
+	var found = ll_planets.getNode('Jupiter');
+	if (found !== -1) 
+		ll_planets.delete(found);
+	else
+		ll_planets.delete();
+	ll_planets.display();
+	ll_planets.clear();
+	ll_planets.display();
+}
