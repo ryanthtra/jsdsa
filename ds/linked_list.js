@@ -1,5 +1,3 @@
-"use strict";
-
 /**
  * @constructor
  * @param data - The data for the node.
