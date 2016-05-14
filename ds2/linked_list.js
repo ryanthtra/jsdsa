@@ -130,7 +130,7 @@ function LinkedList()
 	this.indexOf = function(element)
 	{
 		var current = head,
-				index = -1;
+				index = 0;
 				
 		while (current)
 		{
@@ -221,11 +221,169 @@ function DoublyLinkedList()
 		// Protect against out of bounds
 		if (position >= 0 && position <= length)
 		{
+			var node = new Node(element),
+					current = head,
+					previous = null,
+					index = 0;
 			
+			// Inserting @first position
+			if (position === 0)
+			{
+				// Is empty list
+				if (!head)
+				{
+					head = node;
+					tail = node;
+				}
+				else
+				{
+					node.next = current;
+					current.prev = node;
+					head = node;
+				}
+			}
+			// Inserting @last position
+			else if (position === length)
+			{
+				current = tail;
+				current.next = node;
+				node.prev = current;
+				tail = node;
+			}
+			// Inserting everywhere else.
+			else
+			{
+				while (index++ < position)
+				{
+					previous = current;
+					current = current.next;
+				}
+				// We found the correct position at this point.
+				// Change the links.
+				previous.next = node;
+				node.prev = previous;
+				current.prev = node;
+				node.next = current;
+			}
+			length++;
+			return true;
 		}
 		else
 		{
 			return false;
 		}
 	};
+	
+	/**
+	 * @removeAt
+	 * @param position
+	 */
+	this.removeAt = function(position)
+	{
+		// Protect against out of bounds
+		if (position >= 0 && position < length)
+		{
+			var current = head,
+					previous = null;
+					index = 0;
+					
+			// Removing head
+			if (position === 0)
+			{
+				head = current.next;
+				
+				// If this was the only node in the list
+				if (length === 1)
+				{
+					tail = null;
+				}
+				else
+				{
+					head.prev = null;
+				}
+			}
+			// Removing tail
+			else if (position === length - 1)
+			{
+				current = tail;
+				tail = current.prev;
+				tail.next = null;
+			}
+			// Removing anywhere else
+			else
+			{
+				while (index++ < position)
+				{
+					previous = current;
+					current = current.next;
+				}
+				// Now at the correct position.
+				// Change links.
+				previous.next = current.next;
+				current.next.prev = previous;
+			}
+			length--;
+			return current.element;
+		}
+		else
+		{
+			return null;
+		}
+	};
+	
+	
+	/**
+	 * @remove
+	 * @param element
+	 */
+	this.remove = function(element)
+	{
+		return this.removeAt(this.indexOf(element));
+	}
+	
+	
+	/**
+	 * @indexOf
+	 * @element - element of the node we are looking for
+	 */
+	this.indexOf = function(element)
+	{
+		let current = head,
+				index = 0;
+				
+		while (current)
+		{
+			if (element === current.element)
+			{
+				return index;
+			}
+			current = current.next;
+			index++;
+		}
+		
+		// We are past the entire list at this point.
+		return -1;
+	};
+	
+	
+	this.isEmpty = function()
+	{
+		return length === 0;
+	}
+	
+	
+	this.size = function()
+	{
+		return length;
+	}
+	
+	this.getHead = function()
+	{
+		return head;
+	}
+	
+	this.getTail = function()
+	{
+		return tail;
+	}
 }
