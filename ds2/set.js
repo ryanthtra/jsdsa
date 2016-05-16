@@ -1,5 +1,6 @@
 /*
 Custom set based on the ES6 version.
+Stores items as a [key, key] pair.
 */
 
 function Set_()
