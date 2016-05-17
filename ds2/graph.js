@@ -1,5 +1,5 @@
 /*
-(undirected) Graph class.  Implemented using adjacency list.
+(undirected, unweighted) Graph class.  Implemented using adjacency list.
 */
 function Graph()
 {
@@ -29,7 +29,7 @@ function Graph()
    */
   this.toString = function()
   {
-    var s = '';
+    var s = '------STRING REPRESENTATION OF GRAPH------\n';
     for (let i = 0; i < vertices.length; i++) //10
     {
       s += vertices[i] + ' -> ';
@@ -40,10 +40,22 @@ function Graph()
       }
       s += '\n';    //13
     }
+    s += '------END STRING REPRESENTATION------';
     return s;
   };
   
+  /**
+   * printNode - the process function when visiting a vertex in BFS and DFS
+   */
+  this.printNode = function(value)
+  {
+    console.log('Visited vertex: ' + value);
+  };
+  
+  
+  //*****************************************//
   // BREADTH-FIRST SEARCH ALGORITHM METHODS
+  //*****************************************//
   /**
    * Colors: white - node not visited
    *         gray - node discovered only
@@ -59,10 +71,6 @@ function Graph()
     }
     return color;
   };
-  this.printNode = function(value)
-  {
-    console.log('Visited vertex: ' + value);
-  };
   /**
    * bfs
    * @param v - the 'starting point' vertex
@@ -71,7 +79,7 @@ function Graph()
   this.bfs = function(v, callback)
   {
     var color = initializeColor(),  // 2
-        queue = new Queue;          // 3
+        queue = new Queue;              // 3
     queue.enqueue(v);               // 4
     
     while (!queue.isEmpty())          // 5
@@ -173,7 +181,65 @@ function Graph()
       }
       console.log(s);
     }
-  }
+  };
+  
+  
+  //*****************************************//
+  // DEPTH-FIRST SEARCH ALGORITHM METHODS
+  //*****************************************//
+  /**
+   * dfs - a DFS algorithm for only 'visiting' vertices
+   * @param callback the function used to 'process' the vertex.
+   * 
+   */
+  this.dfs = function(callback)
+  {
+    // Array for marking the status of all the vertices.
+    var color = initializeColor();
+    
+    for (let i = 0; i < vertices.length; i++)
+    {
+      if (color[vertices[i]] === 'white')
+      {
+        // If the graph is entirely connected, then this will only be called once (not counting the recursive calls).
+        dfsVisit(vertices[i], color, callback);
+      }
+    }
+  };
+  /**
+   * (private) dfsVisit - the recursive helper function that does the actual DFS.
+   * @param u - the vertex we are currently visiting
+   * @param color - array holding the visiting statuses of the vertices in the graph.
+   * @param callback - the process function.
+   *  
+   ***** Basic steps: *****
+   * 1. Mark 'v' as discovered/visited.
+   * 2. For all unvisited neighbors 'w' of 'v':
+   *    - Visit 'w'.
+   * 3. Mark 'v' as explored. 
+   */
+  var dfsVisit = function(u, color, callback)
+  {
+    // Mark the parameter vertex as visited. (Basic step #1)
+    color[u] = 'grey';
+    if (callback) 
+      callback(u);
+      
+    // Get all the adjacent vertices of 'u'.
+    var neighbors = adjList.get(u);
+    for (let i = 0; i < neighbors.length; i++)
+    {
+      var w = neighbors[i];
+      if (color[w] === 'white')
+      {
+        // (Basic step #2) - recursive call 
+        dfsVisit(w, color, callback);
+      }
+    }
+    
+    // (Basic step #3) - All neighbors have been visited, which means the vertex is fully explored.
+    color[u] = 'black';
+  };
 }
 
 function testGraph()
@@ -195,8 +261,10 @@ function testGraph()
   graph.addEdge('B','F');
   graph.addEdge('E','I');
   console.log(graph.toString());
-  graph.bfs(myVertices[3], graph.printNode);
+  graph.bfs(myVertices[0], graph.printNode);
   var shortestPathA = graph.BFS(myVertices[0]);
   console.log(shortestPathA);
-  graph.printShortestPaths(myVertices[3]);
+  graph.printShortestPaths(myVertices[0]);
+  console.log('-------DOING dfs---------');
+  graph.dfs(graph.printNode);
 }
