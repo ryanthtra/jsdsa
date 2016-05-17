@@ -189,10 +189,69 @@ function BinarySearchTree()
   /**
    * remove - removes the key from the tree
    */
-  this.remove = function()
+  this.remove = function(key)
   {
-    
+    root = removeNode(root, key);
   };
+  var removeNode = function(node, key)
+  {
+    if (node === null) //2
+    {
+      return null;
+    }
+    
+    // First, search for the node.
+    if (key < node.key) //3
+    {
+      node.left = removeNode(node.left, key); //4
+      return node; //5
+    }
+    else if (key > node.key) //6
+    {
+      node.right = removeNode(node.right, key); //7
+      return node; //8
+    }
+    else // We found the node
+    {
+      // Leaf node case (no children)
+      if (node.left === null && node.right === null) //9
+      {
+        node = null; //10
+        return node; //11
+      }
+      // One child case
+      if (node.left === null) //12
+      {
+        // Replace target node with the lone child (right).
+        node = node.right; //13
+        return node; //14
+      }
+      else if (node.right === null) //15
+      {
+        // Replace target node with the lone child (left).
+        node = node.left; //16
+        return node; //17
+      }
+      // Two children case
+      // Replace target node with the left-most (min) child of the target's right subtree.
+      var aux = findMinNode(node.right); //18
+      node.key = aux.key; //19
+      node.right = removeNode(node.right, aux.key); //20
+      return node; //21
+    }
+  };
+  var findMinNode = function(node)
+  {
+    if (node)
+    {
+      while (node && node.left !== null)
+      {
+        node = node.left;
+      }
+      return node;
+    }
+    return null;
+  }
 }
 
 
@@ -225,4 +284,9 @@ function testBST()
   console.log('max: ' + tree.max());
   console.log('Has 13? ' + tree.search(13));
   console.log('Has 19? ' + tree.search(19));
+  console.log('-----REMOVING NODES-----');
+  tree.remove(6); // Removing zero-child node
+  tree.remove(5); // Removing one-child node
+  tree.remove(15); // Removing two-children node
+  tree.preOrderTraverse(tree.printNode);
 }
