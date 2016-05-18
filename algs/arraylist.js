@@ -230,27 +230,29 @@ function ArrayList()
    */
   var partition = function(array, left, right)
   {
-    // Basic step #1
+    // Basic step #1 (pick pivot)
     var pivot = array[Math.floor((right + left) / 2)],  // 8
         i = left,                             // 9
         j = right;                            // 10
         
-    // Basic step #2-iv
+    // Basic step #2-iv (left and right cross)
     while (i <= j)                            // 11
     {
-      // Basic step #2-i
-      while (array[i] < pivot){ i++; }            // 12
-      // Basic step #2-ii
+      // Basic step #2-i (find lefts >= pivot)
+      while (array[i] < pivot){ i++; }        // 12
+   
+      // Basic step #2-ii (find rights <= pivot)
       while (array[j] > pivot){ j--; }            // 13
       
       if (i <= j)                             // 14
       {
-        // Basic step #2-iii
+        // Basic step #2-iii (swap left and right values)
         swapQuickSort(array, i, j);           // 15
         i++;
         j--;
       }  
     }
+    return i;
   };
   /**
    * (private) swapQuickSort 
@@ -335,5 +337,17 @@ function testSorts()
   console.log('DEFAULT -- Is array sorted: ' + is_sorted.sorted);
   console.log('Failed at: ' + (!is_sorted.sorted ? is_sorted.where : 'N/A'));
   console.log('\n');
+  
+  console.log('RUNNING QUICKSORT EXAMPLE');
+  test_array = new ArrayList();
+  test_array.insert(3);
+  test_array.insert(5);
+  test_array.insert(1);
+  test_array.insert(6);
+  test_array.insert(4);
+  test_array.insert(7);
+  test_array.insert(2);
+  test_array.quicksort();
+  console.log(test_array.toString());
 }
 
