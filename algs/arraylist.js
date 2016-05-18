@@ -29,9 +29,15 @@ function ArrayList()
     for (let i = 0; i < length - 1; i++)
     {
       if (array[i] > array[i+1])
-        return false;
+        return {
+          sorted: false,
+          where: (i+1)
+        };
     }
-    return true;
+    return {
+      sorted: true,
+      where: -1
+    };
   };
   //***************************//
   //    SORTING FUNCTIONS      //
@@ -205,6 +211,7 @@ function ArrayList()
   {
     var index;                                // 1
     
+    // Recursion stops when the subarray is a single element.
     if (array.length > 1)                     // 2
     {
       // Basic steps #1 and #2
@@ -224,7 +231,44 @@ function ArrayList()
   var partition = function(array, left, right)
   {
     // Basic step #1
-    var pivot = array[Math.floor((right + ))]
+    var pivot = array[Math.floor((right + left) / 2)],  // 8
+        i = left,                             // 9
+        j = right;                            // 10
+        
+    // Basic step #2-iv
+    while (i <= j)                            // 11
+    {
+      // Basic step #2-i
+      while (array[i] < pivot){ i++; }            // 12
+      // Basic step #2-ii
+      while (array[j] > pivot){ j--; }            // 13
+      
+      if (i <= j)                             // 14
+      {
+        // Basic step #2-iii
+        swapQuickSort(array, i, j);           // 15
+        i++;
+        j--;
+      }  
+    }
+  };
+  /**
+   * (private) swapQuickSort 
+   */
+  var swapQuickSort = function(array, index1, index2)
+  {
+    var temp = array[index1];
+    array[index1] = array[index2];
+    array[index2] = temp;
+  };
+  
+  // Default JavaScript sort function
+  this.defaultSort = function()
+  {
+    array.sort(function(a,b)
+    {
+      return a-b;
+    });
   };
 }
 
@@ -246,32 +290,50 @@ function testSorts()
 {
   console.log('RUNNING BUBBLE SORT');
   var array = createNonSortedArray(32768);
-  console.log('Is array sorted: ' + array.isSorted());
+  console.log('Is array sorted: ' + array.isSorted().sorted);
   array.modifiedBubbleSort();
-  console.log('BUBBLE -- Is array sorted: ' + array.isSorted());
+  console.log('BUBBLE -- Is array sorted: ' + array.isSorted().sorted);
+  console.log('\n');
   
   console.log('RUNNING SELECTION SORT');
   var array = createNonSortedArray(32768);
-  console.log('Is array sorted: ' + array.isSorted());
+  console.log('Is array sorted: ' + array.isSorted().sorted);
   array.selectionSort();
-  console.log('SELECTION -- Is array sorted: ' + array.isSorted());
+  console.log('SELECTION -- Is array sorted: ' + array.isSorted().sorted);
+  console.log('\n');
   
   console.log('RUNNING INSERTION SORT');
   var array = createNonSortedArray(32768);
-  console.log('Is array sorted: ' + array.isSorted());
+  console.log('Is array sorted: ' + array.isSorted().sorted);
   array.insertionSort();
-  console.log('INSERTION -- Is array sorted: ' + array.isSorted());
+  console.log('INSERTION -- Is array sorted: ' + array.isSorted().sorted);
+  console.log('\n');
   
   console.log('RUNNING MERGE SORT - 32768 elements');
   var array = createNonSortedArray(32768);
-  console.log('Is array sorted: ' + array.isSorted());
+  console.log('Is array sorted: ' + array.isSorted().sorted);
   array.mergeSort();
-  console.log('MERGE -- Is array sorted: ' + array.isSorted());
+  console.log('MERGE -- Is array sorted: ' + array.isSorted().sorted);
+  console.log('\n');
   
   console.log('RUNNING QUICK SORT - 32768 elements');
   var array = createNonSortedArray(32768);
-  console.log('Is array sorted: ' + array.isSorted());
-  array.mergeSort();
-  console.log('QUICK -- Is array sorted: ' + array.isSorted());
+  console.log('Is array sorted: ' + array.isSorted().sorted);
+  array.quicksort();
+  // console.log(array.toString());
+  var is_sorted = array.isSorted();
+  console.log('QUICK -- Is array sorted: ' + is_sorted.sorted);
+  console.log('Failed at: ' + (!is_sorted.sorted ? is_sorted.where : 'N/A'));
+  console.log('\n');
+  
+  console.log('RUNNING BROWSER DEFAULT JAVASCRIPT SORT - 32768 elements');
+  var array = createNonSortedArray(32768);
+  console.log('Is array sorted: ' + array.isSorted().sorted);
+  array.defaultSort();
+  var is_sorted = array.isSorted();
+  // console.log(array.toString());
+  console.log('DEFAULT -- Is array sorted: ' + is_sorted.sorted);
+  console.log('Failed at: ' + (!is_sorted.sorted ? is_sorted.where : 'N/A'));
+  console.log('\n');
 }
 
