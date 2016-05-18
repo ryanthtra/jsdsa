@@ -157,6 +157,9 @@ function ArrayList()
         il = 0,
         ir = 0;
         
+    // Compare the current smallest elements of the two halves.
+    // Push the smaller element onto the return array until we've
+    // gone through the entirety of one of the halves.
     while (il < left.length && ir < right.length) // 8
     {
       if (left[il] < right[ir])
@@ -165,6 +168,8 @@ function ArrayList()
         result.push(right[ir++]);         // 10
     }
     
+    // Push the remaining elements of the incomplete halves 
+    // onto the return array.
     while (il < left.length)              // 11
       result.push(left[il++]);
     
@@ -177,6 +182,17 @@ function ArrayList()
   
   /**
    * quicksort
+   * 
+   * Basic steps:
+   *  1. Pick a 'pivot' (typically the middle element).
+   *  2. Use two iterators: left (first item of array) and right (last item)
+   *     i.   Move left up until the value is more than the the pivot's value.
+   *     ii.  Move right down until the value is less than the pivot's value.
+   *     iii. Swap the places of the left and right values.
+   *     iv.  Repeat i-iii until left and right pass each other.
+   * 3. Split the array into two halves (left array of pivot and right array).
+   * 4. Repeat 1-3 for each subarray.
+   *     
    */
   this.quicksort = function()
   {
@@ -187,7 +203,28 @@ function ArrayList()
    */
   var quick = function(array, left, right)
   {
+    var index;                                // 1
     
+    if (array.length > 1)                     // 2
+    {
+      // Basic steps #1 and #2
+      index = partition(array, left, right); // 3
+      
+      // Basic steps #3 and 4
+      if (left < index - 1)                   // 4
+        quick(array, left, index - 1);        // 5
+      
+      if (index < right)                      // 6
+        quick(array, index, right);           // 7
+    }
+  };
+  /**
+   * (private) partition
+   */
+  var partition = function(array, left, right)
+  {
+    // Basic step #1
+    var pivot = array[Math.floor((right + ))]
   };
 }
 
