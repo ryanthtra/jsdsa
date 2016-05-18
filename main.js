@@ -1,4 +1,5 @@
 document.addEventListener("DOMContentLoaded", function()
 {
-	testSorts();
+	//testInfiniteRecursion();
+	testFibonacci(32);
 });
