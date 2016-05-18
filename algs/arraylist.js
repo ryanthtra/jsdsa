@@ -272,6 +272,47 @@ function ArrayList()
       return a-b;
     });
   };
+  
+  //**************************//
+  //      SEARCHES            //
+  //**************************//
+  this.sequentialSearch = function(item)
+  {
+    for (let i = 0; i < array.length; i++)
+    {
+      if (item === array[i])
+        return i;
+    }
+    return -1;
+  };
+  
+  this.binarySearch = function(item)
+  {
+    this.quicksort();                 // 1
+    var low = 0;                      // 2
+        high = array.length - 1,      // 3
+        mid = -1, guess = -1,
+        count = 0;
+        
+    while (low <= high)
+    {
+      mid = Math.floor((low + high) / 2); // 5
+      guess = array[mid];
+      console.log('Guessing ' + guess);
+      count++;
+      if (guess < item) // Guess is too low 
+        low = mid + 1;
+      else if (guess > item) // Guess is too high
+        high = mid - 1;
+      else
+      {
+        console.log('Found ' + item + '! Count: ' + count);
+        return mid;
+      }
+    }
+    console.log('Did not find ' + item);
+    return -1;  // Element not found
+  };
 }
 
 
@@ -339,7 +380,7 @@ function testSorts()
   console.log('\n');
   
   console.log('RUNNING QUICKSORT EXAMPLE');
-  test_array = new ArrayList();
+  var test_array = new ArrayList();
   test_array.insert(3);
   test_array.insert(5);
   test_array.insert(1);
@@ -349,5 +390,9 @@ function testSorts()
   test_array.insert(2);
   test_array.quicksort();
   console.log(test_array.toString());
+  
+  console.log('BINARY SEARCH EXAMPLE');
+  test_array = createNonSortedArray(1024);
+  test_array.binarySearch(8);
 }
 
